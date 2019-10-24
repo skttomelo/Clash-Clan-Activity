@@ -37,5 +37,7 @@ with open('player_donations.txt', 'w') as txt_file:
         txt_file.write(p_data)
 with open('player_war_inactivity.txt', 'w') as txt_file:
     for player in clanmembers['items']:
-        p_data = '%s - %a: %d\n' % (player['tag'], player['name'], inactive_wars_consec(player['tag'], inactive_wars_row))
-        txt_file.write(p_data)
+        inactivity = inactive_wars_consec(player['tag'], inactive_wars_row)
+        if inactivity != 0:
+            p_data = '%s - %a: %d\n' % (player['tag'], player['name'], inactivity)
+            txt_file.write(p_data)

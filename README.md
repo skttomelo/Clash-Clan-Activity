@@ -1,5 +1,8 @@
 # Clash-Clan-Activity
 Track which members are active/inactive
+# API's
+* Official Clash Royale API
+* (Not yet implemented) Royale API
 # Goals
 * Show which members of a clan are repeatedly not doing all their clan collection/war battles
 * set a donation threshold and check which players are consistently meeting or going beyond said threshold
