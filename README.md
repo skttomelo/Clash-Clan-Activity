@@ -7,3 +7,6 @@ Track which members are active/inactive
 * Identify vital clan members for collection day battles
 * Identify vital clan members for war day battles
 * Identify great war clan members all around (donations, collections, war battles)
+# Dependencies
+* python-dotenv
+* requests
