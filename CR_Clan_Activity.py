@@ -8,6 +8,7 @@ clanmembers = requests.get(API_URL+'clans/'+CLAN+'/members', headers={"Accept":"
 # consolidate these vars to a config file
 inactive_wars_row = 3 # How many wars in a row can a player be inactive
 donation_threshold = 50 # minimum donations a player will need before the hit the threshold minimum
+whitelist = {}
 # TODO: add a time variable for how long a player is allowed to be offline before their inactivity is recorded
 
 # find which players have been inactive consec based off inactive_wars_row and return how many days in a row they have missed from the past 3 wars (excludes on-going)
@@ -26,6 +27,25 @@ def inactive_wars_consec(player_tag, inactive_times):
         else:
             consec_inactive = 0
     return consec_inactive
+
+def is_accessible(path, mode='r'):
+    """
+    Check if the file or directory at `path` can
+    be accessed by the program using `mode` open flags.
+    """
+    try:
+        f = open(path, mode)
+        f.close()
+    except IOError:
+        return False
+    return True
+
+# TODO: implement whitelist.json and remove entries when 7 days have past since the date_of_return
+if is_accessible('whitelist.json') == True:
+    with open('whitelist.json', 'r') as json_file:
+        whitelist = json.load(json_file)
+else:
+    print('whitelist.json doesn\'t exist')
 
 with open('warlog.json', 'w') as json_file:
     json.dump(warlog, json_file)
