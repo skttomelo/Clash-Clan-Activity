@@ -4,6 +4,6 @@ import os
 
 env_path = Path('.') / 'config.env'
 load_dotenv(dotenv_path=env_path)
-API_KEY = os.getenv('API_KEY')
-API_URL = os.getenv('API_URL')
+CR_API_KEY = os.getenv('CR_API_KEY')
+CR_API_URL = os.getenv('CR_API_URL')
 CLAN = os.getenv('CLAN')

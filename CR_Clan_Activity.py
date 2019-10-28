@@ -1,9 +1,9 @@
 import json
 import requests
-from settings import API_KEY, API_URL, CLAN
+from settings import CR_API_KEY, CR_API_URL, CLAN
 
-warlog = requests.get(API_URL+'clans/'+CLAN+'/warlog', headers={"Accept":"application/json", "authorization":API_KEY}, params={"limit":3}).json()
-clanmembers = requests.get(API_URL+'clans/'+CLAN+'/members', headers={"Accept":"application/json", "authorization":API_KEY}).json()
+warlog = requests.get(CR_API_URL+'clans/'+CLAN+'/warlog', headers={"Accept":"application/json", "authorization":CR_API_KEY}, params={"limit":3}).json()
+clanmembers = requests.get(CR_API_URL+'clans/'+CLAN+'/members', headers={"Accept":"application/json", "authorization":CR_API_KEY}).json()
 
 # consolidate these vars to a config file
 inactive_wars_row = 3 # How many wars in a row can a player be inactive
