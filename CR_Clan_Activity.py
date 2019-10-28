@@ -12,7 +12,7 @@ ra_test = requests.get(RA_API_URL+'player/8C9CQ00Y', headers=ra_headers).json()
 with open('stats royale test.json', 'w') as test:
     json.dump(ra_test, test)
 
-#Oficial Clash Royale API Calls
+#Official Clash Royale API Calls
 cr_headers = {"Accept":"application/json", "authorization":CR_API_KEY}
 warlog = requests.get(CR_API_URL+'clans/'+CLAN+'/warlog', headers=cr_headers, params={"limit":3}).json()
 clanmembers = requests.get(CR_API_URL+'clans/'+CLAN+'/members', headers=cr_headers).json()
