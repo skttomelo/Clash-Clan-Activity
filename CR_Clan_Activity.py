@@ -1,9 +1,21 @@
 import json
 import requests
-from settings import CR_API_KEY, CR_API_URL, CLAN
+from settings import RA_API_KEY, RA_API_URL, CR_API_KEY, CR_API_URL, CLAN
 
-warlog = requests.get(CR_API_URL+'clans/'+CLAN+'/warlog', headers={"Accept":"application/json", "authorization":CR_API_KEY}, params={"limit":3}).json()
-clanmembers = requests.get(CR_API_URL+'clans/'+CLAN+'/members', headers={"Accept":"application/json", "authorization":CR_API_KEY}).json()
+# Royale API Calls
+'''
+    https://api.royaleapi.com/clan/2U2GGQJ/history -- could be used to track which players are new which could then be cross checked with
+    the official clash royale api to see which players joined during the last war based off time/date
+'''
+ra_headers = {"Accept":"application/json", "authorization":RA_API_KEY}
+ra_test = requests.get(RA_API_URL+'player/8C9CQ00Y', headers=ra_headers).json()
+with open('stats royale test.json', 'w') as test:
+    json.dump(ra_test, test)
+
+#Oficial Clash Royale API Calls
+cr_headers = {"Accept":"application/json", "authorization":CR_API_KEY}
+warlog = requests.get(CR_API_URL+'clans/'+CLAN+'/warlog', headers=cr_headers, params={"limit":3}).json()
+clanmembers = requests.get(CR_API_URL+'clans/'+CLAN+'/members', headers=cr_headers).json()
 
 # consolidate these vars to a config file
 inactive_wars_row = 3 # How many wars in a row can a player be inactive
