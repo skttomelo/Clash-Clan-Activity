@@ -1,8 +1,8 @@
 # Clash-Clan-Activity
 Track which members are active/inactive in your clash royale clan.
 # API's
-* Official Clash Royale API
-* (Not yet implemented) Royale API
+* ~~Official Clash Royale API~~ removed
+* Royale API
 # Goals
 * Show which members of a clan are repeatedly not doing all their clan collection/war battles (Done)
 * Implement whitelist system for members who say they will be inactive (In-progress)
