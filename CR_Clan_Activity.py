@@ -1,6 +1,6 @@
 import json
 import requests
-from settings import RA_API_KEY, RA_API_URL, CR_API_KEY, CR_API_URL, CLAN
+from settings import RA_API_KEY, RA_API_URL, CLAN
 
 # Royale API Calls
 '''
@@ -8,37 +8,46 @@ from settings import RA_API_KEY, RA_API_URL, CR_API_KEY, CR_API_URL, CLAN
     the official clash royale api to see which players joined during the last war based off time/date
 '''
 ra_headers = {"Accept":"application/json", "authorization":RA_API_KEY}
-ra_test = requests.get(RA_API_URL+'player/8C9CQ00Y', headers=ra_headers).json()
-with open('stats royale test.json', 'w') as test:
-    json.dump(ra_test, test)
 
-#Official Clash Royale API Calls
-cr_headers = {"Accept":"application/json", "authorization":CR_API_KEY}
-warlog = requests.get(CR_API_URL+'clans/'+CLAN+'/warlog', headers=cr_headers, params={"limit":3}).json()
-clanmembers = requests.get(CR_API_URL+'clans/'+CLAN+'/members', headers=cr_headers).json()
+warlog = requests.get(RA_API_URL+'clan/'+CLAN+'/warlog', headers=ra_headers).json()
+clanhistory = requests.get(RA_API_URL+'clan/'+CLAN+'/history', headers=ra_headers).json()
+clanmembers = requests.get(RA_API_URL+'clan/'+CLAN, headers=ra_headers).json()
 
 # consolidate these vars to a config file
 inactive_wars_row = 3 # How many wars in a row can a player be inactive
 donation_threshold = 50 # minimum donations a player will need before the hit the threshold minimum
 whitelist = {}
-# TODO: add a time variable for how long a player is allowed to be offline before their inactivity is recorded
 
 # find which players have been inactive consec based off inactive_wars_row and return how many days in a row they have missed from the past 3 wars (excludes on-going)
 def inactive_wars_consec(player_tag, inactive_times):
     consec_inactive = 0 # wars so far inactive
-    for war in warlog['items']:
+    current_war = 0 # will be used to keep track of how many wars we check
+    for war in warlog: # loop through each war in the log
         in_war = True
-        for participant in war['participants']:
+        if current_war == inactive_times: # we have checked all the wars we needed too
+            break
+        for participant in war['participants']: # loop through participants in the war
+            # check if they were in the war
             if player_tag != participant['tag']:
                 in_war = False
             else:
-                in_war = True
-                break
+                if (participant['battlesMissed'] != 0) and (participant['collectionDayBattlesPlayed'] != 3):
+                    in_war = False
+                else:
+                    in_war = True
+                break # we found the player so it's time to check the next war
         if in_war == False:
             consec_inactive += 1
         else:
             consec_inactive = 0
+        current_war += 1
     return consec_inactive
+
+# checks if a player joined during the last war
+# in particular we care if the player joined between half-way through the collection day battle and before the entire war ended
+# that would mean that a player would be considered new if they joined within 36 hours prior to the war ending
+def is_new_player(player, war_end_time):
+
 
 def is_accessible(path, mode='r'):
     """
@@ -64,11 +73,11 @@ with open('warlog.json', 'w') as json_file:
 with open('clanmembers.json', 'w') as json_file:
     json.dump(clanmembers, json_file)
 with open('player_donations.txt', 'w') as txt_file:
-    for player in clanmembers['items']:
+    for player in clanmembers['members']:
         p_data = '%s - %a: %d\n' % (player['tag'], player['name'], player['donations'])
         txt_file.write(p_data)
 with open('player_war_inactivity.txt', 'w') as txt_file:
-    for player in clanmembers['items']:
+    for player in clanmembers['members']:
         inactivity = inactive_wars_consec(player['tag'], inactive_wars_row)
         if inactivity != 0:
             p_data = '%s - %a: %d\n' % (player['tag'], player['name'], inactivity)
