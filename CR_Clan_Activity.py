@@ -44,10 +44,23 @@ def inactive_wars_consec(player_tag, inactive_times):
     return consec_inactive
 
 # checks if a player joined during the last war
-# in particular we care if the player joined between half-way through the collection day battle and before the entire war ended
-# that would mean that a player would be considered new if they joined within 36 hours prior to the war ending
-def is_new_player(player, war_end_time):
-
+# in particular we care if the player joined after the collection day battle and before the end of the war
+# that would mean that a player would be considered new if they joined within 24 hours prior to the war ending
+# def is_new_player(player, war_end_time):
+    
+# count the total members, elders, and coleaders in clan
+def rank_count():
+    member = 0
+    elder = 0
+    coleader = 0
+    for player in clanmembers['members']:
+        if player['role'] == 'member':
+            member += 1
+        elif player['role'] == 'elder':
+            elder += 1
+        elif player['role'] == 'coLeader':
+            coleader += 1
+    return member,elder,coleader
 
 def is_accessible(path, mode='r'):
     """
@@ -68,6 +81,10 @@ if is_accessible('whitelist.json') == True:
 else:
     print('whitelist.json doesn\'t exist')
 
+with open('role_count.txt', 'w') as txt_file:
+    member,elder,coleader = rank_count()
+    data = 'Total Player Count: %s\nTotal Member Count: %a\nTotal Elder Count: %d\nTotal CoLeader Count = %e' % (clanmembers['memberCount'],member,elder,coleader)
+    txt_file.write(data)
 with open('warlog.json', 'w') as json_file:
     json.dump(warlog, json_file)
 with open('clanmembers.json', 'w') as json_file:
